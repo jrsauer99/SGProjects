@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/mvc
+          http://www.springframework.org/schema/mvc/spring-mvc.xsd
+          http://www.springframework.org/schema/tx
+          http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/aop  
+          http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+    <!-- Bean definitions go here -->
+    <!-- Dependency Injection -->
+    <bean id="userIO" class="com.sguild.flooring.ui.UserIOConsoleImpl"/>
+    
+    <bean id="view" class="com.sguild.flooring.ui.FlooringView">
+        <constructor-arg ref="userIO"/>
+    </bean>
+    
+    <bean id="orderDao" class="com.sguild.flooring.dao.FlooringOrderDaoImpl"/>
+    
+    <bean id="orderTrainDao" class="com.sguild.flooring.dao.FlooringOrderTrainingDaoImpl"/>
+    
+    <bean id="configDao" class="com.sguild.flooring.dao.FlooringConfigDaoImpl">
+        <constructor-arg value="config.txt"/>
+        
+    </bean>
+    
+    <bean id="productDao" class="com.sguild.flooring.dao.FlooringProductDaoImpl"/>
+    
+    <bean id="stateDao" class="com.sguild.flooring.dao.FlooringStateDaoImpl"/>
+    
+    <!-- Production Mode -->
+    <bean id="serviceLayer1" class="com.sguild.flooring.service.FlooringServiceLayerImpl">
+        <constructor-arg ref="orderDao"/>
+        <constructor-arg ref="productDao"/>
+        <constructor-arg ref="stateDao"/>
+        <constructor-arg ref="configDao"/>
+        <property name="isTraining" value="#{configDao.isTraining}"/>
+    </bean>
+    
+    <bean id="controller1" class="com.sguild.flooring.controller.FlooringController">
+        <constructor-arg ref="serviceLayer1"/>
+        <constructor-arg ref="view"/>
+    </bean>  
+   
+    <!-- Training Mode -->
+    <bean id="serviceLayer2" class="com.sguild.flooring.service.FlooringServiceLayerImpl">
+        <constructor-arg ref="orderTrainDao"/>
+        <constructor-arg ref="productDao"/>
+        <constructor-arg ref="stateDao"/>
+        <constructor-arg ref="configDao"/>
+        <property name="isTraining" value="#{configDao.isTraining}"/>
+    </bean>
+    
+    <bean id="controller2" class="com.sguild.flooring.controller.FlooringController">
+        <constructor-arg ref="serviceLayer2"/>
+        <constructor-arg ref="view"/>
+    </bean> 
+    
+    <!--AOP beans-->
+    <bean id="auditDao" class="com.sguild.flooring.dao.FlooringAuditDaoImpl"/>
+    
+    <bean id="loggingAdvice" class="com.sguild.flooring.advice.LoggingAdvice">
+        <constructor-arg ref="auditDao"/>
+    </bean>
+     
+    <!-- AOP -->
+    <aop:config>
+        <aop:aspect ref="loggingAdvice">
+            <aop:after-throwing 
+                method="createExceptionEntry"
+                pointcut="execution(* *.*(..))"
+                throwing="ex"
+            />
+            <aop:after-returning
+                method="createReadWarningAudit" 
+                pointcut="execution(* com.sguild.flooring.dao.FlooringOrderDao.loadOrders(..))"
+                returning="result"
+            />
+            
+            <aop:after-returning
+                method="createReadWarnProdStAudit" 
+                pointcut="execution(* com.sguild.flooring.dao.FlooringProductDao.loadProduct(..))"
+                returning="result"
+            />
+            
+            <aop:after-returning
+                method="createReadWarnProdStAudit" 
+                pointcut="execution(* com.sguild.flooring.dao.FlooringStateDao.loadState(..))"
+                returning="result"
+            />
+            
+            <aop:after-returning
+                method="createSuccessAuditEntry" 
+                pointcut="execution(* com.sguild.flooring.service.FlooringServiceLayer.addOrder(..))"
+                returning="result"
+            />
+           
+            <aop:after-returning
+                method="createSuccessAuditEntry" 
+                pointcut="execution(* com.sguild.flooring.service.FlooringServiceLayer.removeOrder(..))"
+                returning="result"
+            />
+             <aop:after-returning
+                method="createSuccessAuditEntry" 
+                pointcut="execution(* com.sguild.flooring.service.FlooringServiceLayer.editOrder(..))"
+                returning="result"
+            />
+             <aop:after-returning
+                method="createSuccessAuditEntry" 
+                pointcut="execution(* com.sguild.flooring.service.FlooringServiceLayer.saveOrders(..))"
+                returning="result"
+            />
+            
+             <aop:after-returning
+                method="createSaveAuditEntry" 
+                pointcut="execution(* com.sguild.flooring.service.FlooringServiceLayer.saveOrders(..))"
+            />
+        </aop:aspect>
+    </aop:config>
+   
+</beans>

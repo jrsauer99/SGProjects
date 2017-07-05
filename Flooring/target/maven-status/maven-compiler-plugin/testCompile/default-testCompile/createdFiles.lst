@@ -1,0 +1,4 @@
+com/sguild/flooring/dao/FlooringStateDaoTest.class
+com/sguild/flooring/dao/FlooringOrderDaoTest.class
+com/sguild/flooring/service/FlooringServiceLayerTest.class
+com/sguild/flooring/dao/FlooringProductDaoTest.class

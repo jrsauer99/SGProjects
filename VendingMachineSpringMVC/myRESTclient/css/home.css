@@ -1,0 +1,97 @@
+            .inner-div {
+                background-color: pink;
+                border-style: solid;
+                border-radius: 10px;
+                margin-top:15px;
+            }
+
+            .user-in {
+               border-style: solid;
+                border-radius: 10px; 
+                height: 40px;
+                margin-bottom: 15px;
+                background-color: white; 
+            }
+
+            .vend-btn {
+                margin-top:15px; 
+
+                transition: all .5s ease;
+            }
+
+            .messages-out {
+                border-style: solid;
+                border-radius: 10px; 
+                height: 45px;
+                margin-bottom: 15px;
+                background-color: white; 
+            }
+
+            .item-out {
+                border-style: solid;
+                border-radius: 10px; 
+                height: 40px;
+                margin-bottom: 15px;
+            }
+
+            .change-messages-out {
+                border-style: solid;
+                border-radius: 10px; 
+                height: 85px;
+                margin-bottom: 15px;
+                background-color: white;
+            }
+
+            .add-money-btn {
+                margin-bottom: 15px;
+            }
+
+            #add-dollar-button, #add-dime-button {
+                margin-right: 15px;
+            }
+
+            .messages-out, .return-change-message { 
+                padding-top:8px;
+
+            }
+
+
+.clicking {
+  transform: scale(1.1);
+  border-color: #ffc600;
+  box-shadow: 0 0 1rem #ffc600;
+}
+
+
+body {
+ 
+  background: url(file:///home/apprentice/Downloads/candy-956555_1920.jpg) ;
+  background-size: cover;
+  opacity: .75;
+}
+
+h1, h2 {
+    color:white;
+}
+
+/*
+body {
+    background: gray;
+}
+
+#b2{
+    background: url(file:///home/apprentice/Downloads/m-ms-1526389_640.jpg) bottom center;
+    opacity:.85;
+}
+
+
+#b1{
+    background: url(file:///home/apprentice/Downloads/snickers-461902_640.jpg) bottom center;
+    opacity:.85;
+}
+
+#b3{
+    background: url(file:///home/apprentice/Downloads/chocolate-524749_640.jpg) bottom center;
+    opacity:.85;
+   
+}*/
